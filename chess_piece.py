@@ -69,3 +69,10 @@ class Chess_Piece(ABC):
     @abstractmethod
     def get_valid_moves(self):
         pass
+
+    def __str__(self):
+        return (f"{self.__class__.__name__}("
+                f"ID: {self._ID}, "
+                f"Position: {self._position}, "
+                f"Color: {self._color}, "
+                f"Direction: {self._direction})")
