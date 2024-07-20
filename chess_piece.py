@@ -13,3 +13,18 @@ class Chess_Piece(ABC):
         x, y = position
         width, height = self._board_size
         return 0 <= x < width and 0 <= y < height
+
+    def get_ID(self):
+        return self._ID
+
+    def get_position(self):
+        return self._position
+
+    def get_color(self):
+        return self._color
+
+    def get_direction(self):
+        return self._direction
+
+    def get_board_size(self):
+        return self._board_size
