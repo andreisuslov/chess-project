@@ -28,3 +28,7 @@ class Chess_Piece(ABC):
 
     def get_board_size(self):
         return self._board_size
+
+    @abstractmethod
+    def get_valid_moves(self):
+        pass
