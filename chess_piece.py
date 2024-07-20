@@ -44,10 +44,14 @@ class Chess_Piece(ABC):
 
         if position_is_valid and piece_not_on_board and within_board_limits:
             self._position = position
+        else:
+            raise ValueError("Invalid placement: Position is not valid or piece is already on board.")
 
     def remove(self):
         if self.is_piece_on_board():
             self._position = (None, None)
+        else:
+            raise ValueError("Cannot remove: Piece is not on the board.")
 
     def move(self, new_position):
         new_position_is_valid = new_position is not None
@@ -56,6 +60,8 @@ class Chess_Piece(ABC):
 
         if new_position_is_valid and piece_is_on_board and move_is_within_valid_moves:
             self._position = new_position
+        else:
+            raise ValueError("Invalid move: New position is not valid or piece is not on board.")
 
     def take(self, other_piece):
         other_piece_is_valid = other_piece is not None
@@ -65,6 +71,8 @@ class Chess_Piece(ABC):
         if other_piece_is_valid and piece_is_on_board and other_piece_position_is_valid:
             self._position = other_piece.get_position()
             other_piece.remove()
+        else:
+            raise ValueError("Invalid take: Other piece is not valid or not in a valid position.")
 
     @abstractmethod
     def get_valid_moves(self):
