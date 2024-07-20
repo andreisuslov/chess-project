@@ -28,23 +28,28 @@ class Chess_Piece(ABC):
         self._direction: str = direction
         self._board_size: Tuple[int, int] = board_size
 
-    def get_ID(self) -> str:
+    @property
+    def ID(self) -> str:
         """Return the unique identifier of the piece."""
         return self._ID
 
-    def get_position(self) -> Optional[Tuple[int, int]]:
+    @property
+    def position(self) -> Optional[Tuple[int, int]]:
         """Return the current position of the piece on the board."""
         return self._position
 
-    def get_color(self) -> str:
+    @property
+    def color(self) -> str:
         """Return the color of the piece."""
         return self._color
 
-    def get_direction(self) -> str:
+    @property
+    def direction(self) -> str:
         """Return the direction the piece is facing."""
         return self._direction
 
-    def get_board_size(self) -> Tuple[int, int]:
+    @property
+    def board_size(self) -> Tuple[int, int]:
         """Return the size of the chess board."""
         return self._board_size
 
