@@ -25,11 +25,11 @@ class Chess_Piece(ABC):
         return self._board_size
 
     @staticmethod
-    def _is_valid_position(self, position):
+    def _is_valid_position(position, board_size):
         if position is None:
             return False
         x, y = position
-        width, height = self._board_size
+        width, height = board_size
         return 0 <= x < width and 0 <= y < height
 
     def is_piece_on_board(self):
@@ -40,7 +40,7 @@ class Chess_Piece(ABC):
     def place(self, position):
         position_is_valid = position is not None
         piece_not_on_board = not self.is_piece_on_board()
-        within_board_limits = self._is_valid_position(position)
+        within_board_limits = self._is_valid_position(position, self._board_size)
 
         if position_is_valid and piece_not_on_board and within_board_limits:
             self._position = position
