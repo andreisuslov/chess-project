@@ -10,4 +10,6 @@ class Chess_Piece(ABC):
         self._board_size = board_size
 
     def _is_valid_position(self, position):
-        pass
+        x, y = position
+        width, height = self._board_size
+        return 0 <= x < width and 0 <= y < height
