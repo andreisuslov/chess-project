@@ -9,11 +9,6 @@ class Chess_Piece(ABC):
         self._direction = direction
         self._board_size = board_size
 
-    def _is_valid_position(self, position):
-        x, y = position
-        width, height = self._board_size
-        return 0 <= x < width and 0 <= y < height
-
     def get_ID(self):
         return self._ID
 
@@ -28,6 +23,11 @@ class Chess_Piece(ABC):
 
     def get_board_size(self):
         return self._board_size
+
+    def _is_valid_position(self, position):
+        x, y = position
+        width, height = self._board_size
+        return 0 <= x < width and 0 <= y < height
 
     @abstractmethod
     def get_valid_moves(self):
