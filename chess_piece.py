@@ -55,7 +55,7 @@ class Chess_Piece(ABC):
     @staticmethod
     def _is_valid_position(position: Optional[Tuple[int, int]], board_size: Tuple[int, int]) -> bool:
         """
-        Check if a given position is valid on the board.
+        A helper method. Check if a given position is valid on the board.
 
         :param position: Position to check as a tuple (x, y)
         :param board_size: Size of the chess board as a tuple (width, height)
