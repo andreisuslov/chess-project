@@ -3,7 +3,14 @@ from typing import Tuple, List, Optional
 
 
 class Chess_Piece(ABC):
-    def __init__(self, ID: str, initial_position: Optional[Tuple[int, int]], color: str, direction: str, board_size: Tuple[int, int] = (8, 8)):
+    def __init__(
+        self,
+        ID: str,
+        initial_position: Optional[Tuple[int, int]],
+        color: str,
+        direction: str,
+        board_size: Tuple[int, int] = (8, 8)
+    ):
         """
         Initialize a Chess_Piece object.
 
@@ -14,7 +21,9 @@ class Chess_Piece(ABC):
         :param board_size: Size of the chess board as a tuple (width, height), default is (8, 8)
         """
         self._ID: str = ID
-        self._position: Optional[Tuple[int, int]] = initial_position if self._is_valid_position(initial_position, board_size) else (None, None)
+        self._position: Optional[Tuple[int, int]] = (
+            initial_position if self._is_valid_position(initial_position, board_size) else (None, None)
+        )
         self._color: str = color
         self._direction: str = direction
         self._board_size: Tuple[int, int] = board_size
