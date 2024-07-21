@@ -229,9 +229,15 @@ class Knight(Chess_Piece):
         if not self.is_piece_on_board():
             return []
 
-        valid_moves = []
+        x, y = self.position
+        potential_moves = [
+            (x + 2, y + 1), (x + 2, y - 1),
+            (x - 2, y + 1), (x - 2, y - 1),
+            (x + 1, y + 2), (x + 1, y - 2),
+            (x - 1, y + 2), (x - 1, y - 2)
+        ]
 
-        return valid_moves
+        return [move for move in potential_moves if self._is_valid_position(move, self.board_size)]
 
     def __str__(self) -> str:
         """Return a string representation of the Knight."""
