@@ -10,7 +10,7 @@ from pieces import Bishop
 from pieces import Rook
 from pieces import Queen
 
-pause = True
+pause = False
 
 # I) Try to construct the Chess_Piece which should fail
 print("I) Try to construct the Chess_Piece which should fail")
