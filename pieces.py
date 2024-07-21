@@ -20,7 +20,7 @@ class Pawn(Chess_Piece):
         :param direction: Direction the piece is facing ("UP" or "DOWN")
         :param board_size: Size of the chess board as a tuple (width, height), default is (8, 8)
         """
-        super().__init__(ID, color, board_size)
+        super().__init__(ID, initial_position, color, direction, board_size)
         self.position = initial_position
         self.direction = direction
 
@@ -97,12 +97,12 @@ class Pawn(Chess_Piece):
 
 class Rook(Chess_Piece):
     def __init__(
-            self,
-            ID: str,
-            initial_position: Optional[Tuple[int, int]],
-            color: str,
-            direction: str,
-            board_size: Tuple[int, int] = (8, 8)
+        self,
+        ID: str,
+        initial_position: Optional[Tuple[int, int]],
+        color: str,
+        direction: str,
+        board_size: Tuple[int, int] = (8, 8)
     ):
         """
         Initialize a Rook object.
@@ -146,12 +146,12 @@ class Rook(Chess_Piece):
 
 class Queen(Rook):
     def __init__(
-            self,
-            ID: str,
-            initial_position: Optional[Tuple[int, int]],
-            color: str,
-            direction: str,
-            board_size: Tuple[int, int] = (8, 8)
+        self,
+        ID: str,
+        initial_position: Optional[Tuple[int, int]],
+        color: str,
+        direction: str,
+        board_size: Tuple[int, int] = (8, 8)
     ):
         """
         Initialize a Queen object.
