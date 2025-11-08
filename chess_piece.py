@@ -32,10 +32,16 @@ class Chess_Piece(ABC):
         return 0 <= x < width and 0 <= y < height
 
     def is_piece_on_board(self):
-        return self._position is not None and self._position != (None, None)
+        has_position = self._position is not None
+        is_not_default_position = self._position != (None, None)
+        return has_position and is_not_default_position
 
     def place(self, position):
-        if position is not None and not self.is_piece_on_board() and self._is_valid_position(position):
+        position_is_valid = position is not None
+        piece_not_on_board = not self.is_piece_on_board()
+        within_board_limits = self._is_valid_position(position)
+
+        if position_is_valid and piece_not_on_board and within_board_limits:
             self._position = position
 
     def remove(self):
@@ -43,11 +49,19 @@ class Chess_Piece(ABC):
             self._position = (None, None)
 
     def move(self, new_position):
-        if new_position is not None and self.is_piece_on_board() and new_position in self.get_valid_moves():
+        new_position_is_valid = new_position is not None
+        piece_is_on_board = self.is_piece_on_board()
+        move_is_within_valid_moves = new_position in self.get_valid_moves()
+
+        if new_position_is_valid and piece_is_on_board and move_is_within_valid_moves:
             self._position = new_position
 
     def take(self, other_piece):
-        if other_piece is not None and self.is_piece_on_board() and other_piece.get_position() in self.get_valid_moves():
+        other_piece_is_valid = other_piece is not None
+        piece_is_on_board = self.is_piece_on_board()
+        other_piece_position_is_valid = other_piece.get_position() in self.get_valid_moves()
+
+        if other_piece_is_valid and piece_is_on_board and other_piece_position_is_valid:
             self._position = other_piece.get_position()
             other_piece.remove()
 
