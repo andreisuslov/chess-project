@@ -29,6 +29,21 @@ class Chess_Piece(ABC):
         width, height = self._board_size
         return 0 <= x < width and 0 <= y < height
 
+    def is_piece_on_board(self):
+        pass
+
+    def place(self, position):
+        pass
+
+    def remove(self):
+        pass
+
+    def move(self, new_position):
+        pass
+
+    def take(self, other_piece):
+        pass
+
     @abstractmethod
     def get_valid_moves(self):
         pass
