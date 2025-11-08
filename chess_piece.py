@@ -25,26 +25,29 @@ class Chess_Piece(ABC):
         return self._board_size
 
     def _is_valid_position(self, position):
+        if position is None:
+            return False
         x, y = position
         width, height = self._board_size
         return 0 <= x < width and 0 <= y < height
 
     def is_piece_on_board(self):
-        return self._position != (None, None)
+        return self._position is not None and self._position != (None, None)
 
     def place(self, position):
-        if not self.is_piece_on_board() and self._is_valid_position(position):
+        if position is not None and not self.is_piece_on_board() and self._is_valid_position(position):
             self._position = position
 
     def remove(self):
-        self._position = (None, None)
+        if self.is_piece_on_board():
+            self._position = (None, None)
 
     def move(self, new_position):
-        if self.is_piece_on_board() and new_position in self.get_valid_moves():
+        if new_position is not None and self.is_piece_on_board() and new_position in self.get_valid_moves():
             self._position = new_position
 
     def take(self, other_piece):
-        if self.is_piece_on_board() and other_piece.get_position() in self.get_valid_moves():
+        if other_piece is not None and self.is_piece_on_board() and other_piece.get_position() in self.get_valid_moves():
             self._position = other_piece.get_position()
             other_piece.remove()
 
