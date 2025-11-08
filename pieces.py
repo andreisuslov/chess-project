@@ -50,7 +50,7 @@ class Pawn(Chess_Piece):
 
     def __str__(self) -> str:
         """Return a string representation of the Pawn."""
-        pass
+        return f"Pawn({super().__str__()})"
 
 
 class Rook(Chess_Piece):
@@ -83,8 +83,7 @@ class Rook(Chess_Piece):
 
     def __str__(self) -> str:
         """Return a string representation of the Rook."""
-        pass
-
+        return f"Rook({super().__str__()})"
 
 class Queen(Rook):
     def __init__(
@@ -116,7 +115,7 @@ class Queen(Rook):
 
     def __str__(self) -> str:
         """Return a string representation of the Queen."""
-        pass
+        return f"Queen({super().__str__()})"
 
 
 class Knight(Chess_Piece):
@@ -149,7 +148,7 @@ class Knight(Chess_Piece):
 
     def __str__(self) -> str:
         """Return a string representation of the Knight."""
-        pass
+        return f"Knight({super().__str__()})"
 
 
 class King(Chess_Piece):
@@ -182,7 +181,7 @@ class King(Chess_Piece):
 
     def __str__(self) -> str:
         """Return a string representation of the King."""
-        pass
+        return f"King({super().__str__()})"
 
 
 class Bishop(Chess_Piece):
@@ -215,4 +214,4 @@ class Bishop(Chess_Piece):
 
     def __str__(self) -> str:
         """Return a string representation of the Bishop."""
-        pass
+        return f"Bishop({super().__str__()})"
