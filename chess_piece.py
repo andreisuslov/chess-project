@@ -24,6 +24,7 @@ class Chess_Piece(ABC):
     def get_board_size(self):
         return self._board_size
 
+    @staticmethod
     def _is_valid_position(self, position):
         if position is None:
             return False
