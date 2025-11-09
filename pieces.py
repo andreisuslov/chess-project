@@ -273,9 +273,15 @@ class King(Chess_Piece):
         if not self.is_piece_on_board():
             return []
 
-        valid_moves = []
+        x, y = self.position
+        potential_moves = [
+            (x + 1, y), (x - 1, y),
+            (x, y + 1), (x, y - 1),
+            (x + 1, y + 1), (x + 1, y - 1),
+            (x - 1, y + 1), (x - 1, y - 1)
+        ]
 
-        return valid_moves
+        return [move for move in potential_moves if self._is_valid_position(move, self.board_size)]
 
     def __str__(self) -> str:
         """Return a string representation of the King."""
