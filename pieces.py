@@ -146,12 +146,12 @@ class Rook(Chess_Piece):
 
 class Queen(Rook):
     def __init__(
-        self,
-        ID: str,
-        initial_position: Optional[Tuple[int, int]],
-        color: str,
-        direction: str,
-        board_size: Tuple[int, int] = (8, 8)
+            self,
+            ID: str,
+            initial_position: Optional[Tuple[int, int]],
+            color: str,
+            direction: str,
+            board_size: Tuple[int, int] = (8, 8)
     ):
         """
         Initialize a Queen object.
@@ -173,7 +173,25 @@ class Queen(Rook):
         if not self.is_piece_on_board():
             return []
 
-        valid_moves = []
+        # Start with the Rook's valid moves (horizontal and vertical)
+        valid_moves = super().get_valid_moves()
+
+        x, y = self.position
+
+        # Add diagonal moves
+        for i in range(1, max(self.board_size)):
+            # Upper-right diagonal
+            if self._is_valid_position((x + i, y + i), self.board_size):
+                valid_moves.append((x + i, y + i))
+            # Upper-left diagonal
+            if self._is_valid_position((x - i, y + i), self.board_size):
+                valid_moves.append((x - i, y + i))
+            # Lower-right diagonal
+            if self._is_valid_position((x + i, y - i), self.board_size):
+                valid_moves.append((x + i, y - i))
+            # Lower-left diagonal
+            if self._is_valid_position((x - i, y - i), self.board_size):
+                valid_moves.append((x - i, y - i))
 
         return valid_moves
 
