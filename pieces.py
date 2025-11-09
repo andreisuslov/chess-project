@@ -21,8 +21,14 @@ class Pawn(Chess_Piece):
         :param board_size: Size of the chess board as a tuple (width, height), default is (8, 8)
         """
         super().__init__(ID, initial_position, color, direction, board_size)
-        self.position = initial_position
-        self.direction = direction
+
+    def place(self, position: Tuple[int, int]) -> None:
+        """
+        Place the pawn on the board if it's not already on the board.
+
+        :param position: Position to place the pawn as a tuple (x, y)
+        """
+        super().place(position)
 
     def get_valid_moves(self) -> List[Tuple[int, int]]:
         """
@@ -34,35 +40,37 @@ class Pawn(Chess_Piece):
             return []
 
         valid_moves = []
-        x, y = self.position
-        direction_modifier = 1 if self.direction == "UP" else -1
+        x, y = self.get_position()
+        direction_modifier = 1 if self.get_direction() == "UP" else -1
 
         # Move one space forward
         new_y = y + direction_modifier
-        if self._is_valid_position((x, new_y)):
+        if self._is_valid_position((x, new_y), self.get_board_size()):
             valid_moves.append((x, new_y))
 
-        # Move two spaces forward if it's the Pawn's first move
-        if (self.direction == "UP" and y == 1) or (self.direction == "DOWN" and y == self.board_size[1] - 2):
-            new_y = y + 2 * direction_modifier
-            if self._is_valid_position((x, new_y)):
-                valid_moves.append((x, new_y))
+            # Check if it's the Pawn's first move
+            is_first_move_up = self.get_direction() == "UP" and y == 1
+            is_first_move_down = self.get_direction() == "DOWN" and y == self.get_board_size()[1] - 2
+
+            if is_first_move_up or is_first_move_down:
+                new_y = y + 2 * direction_modifier
+                if self._is_valid_position((x, new_y), self.get_board_size()):
+                    valid_moves.append((x, new_y))
 
         return valid_moves
 
     def take(self, other_piece: 'Chess_Piece') -> None:
         """
-        Take another piece on the board.
+        Take another piece on the board according to Pawn's special taking rules.
 
         :param other_piece: The Chess_Piece object to be taken
-        :raises ValueError: If the other piece is invalid or not in a valid position to be taken
         """
         if not self.is_piece_on_board() or not other_piece.is_piece_on_board():
-            raise ValueError("Invalid take: One or both pieces are not on the board.")
+            return
 
-        x, y = self.position
-        other_x, other_y = other_piece.position
-        direction_modifier = 1 if self.direction == "UP" else -1
+        x, y = self.get_position()
+        other_x, other_y = other_piece.get_position()
+        direction_modifier = 1 if self.get_direction() == "UP" else -1
 
         valid_take_positions = [
             (x - 1, y + direction_modifier),
@@ -70,28 +78,39 @@ class Pawn(Chess_Piece):
         ]
 
         if (other_x, other_y) in valid_take_positions:
-            self.position = other_piece.position
+            self._position = other_piece.get_position()
             other_piece.remove()
-        else:
-            raise ValueError("Invalid take: The other piece is not in a valid position to be taken by a Pawn.")
+        # Remove the else clause that was raising the ValueError
+
+    def move(self, new_position: Tuple[int, int]) -> None:
+        """
+        Move the pawn to a new position on the board.
+
+        :param new_position: New position to move the pawn to as a tuple (x, y)
+        """
+        if not self.is_piece_on_board():
+            return
+        if new_position in self.get_valid_moves():
+            self._position = new_position
 
     def replace(self, new_piece: 'Chess_Piece') -> None:
         """
-        Replace the Pawn with another piece.
+        Replace the Pawn with another chess piece.
 
-        :param new_piece: The Chess_Piece object to replace the Pawn
-        :raises ValueError: If the new piece is already on the board or the Pawn is not on the board
+        :param new_piece: The Chess_Piece object to replace this Pawn
         """
-        if not self.is_piece_on_board():
-            raise ValueError("Cannot replace: Pawn is not on the board.")
-        if new_piece.is_piece_on_board():
-            raise ValueError("Cannot replace: New piece is already on the board.")
+        if not self.is_piece_on_board() or new_piece.is_piece_on_board():
+            return
 
-        new_piece.place(self.position)
+        new_piece.place(self.get_position())
         self.remove()
 
     def __str__(self) -> str:
-        """Return a string representation of the Pawn."""
+        """
+        Return a string representation of the Pawn.
+
+        :return: String representation of the Pawn
+        """
         return f"Pawn({super().__str__()})"
 
 
