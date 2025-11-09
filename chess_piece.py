@@ -25,7 +25,8 @@ class Chess_Piece(ABC):
         self._direction: str = direction
         self._board_size: Tuple[int, int] = board_size
         self._position: Optional[Tuple[int, int]] = None
-        self.place(initial_position)
+        if initial_position:
+            self.place(initial_position)
 
     @property
     def ID(self) -> str:
@@ -73,25 +74,21 @@ class Chess_Piece(ABC):
         return self._board_size
 
     @staticmethod
-    def _is_valid_position(position: Optional[Tuple[int, int]], board_size: Tuple[int, int]) -> bool:
+    def _is_valid_position(position: Tuple[int, int], board_size: Tuple[int, int]) -> bool:
         """
-        A helper method. Check if a given position is valid on the board.
+        Check if a given position is valid on the board.
 
         :param position: Position to check as a tuple (x, y)
         :param board_size: Size of the chess board as a tuple (width, height)
         :return: True if the position is valid, False otherwise
         """
-        if position is None:
-            return False
         x, y = position
         width, height = board_size
         return 0 <= x < width and 0 <= y < height
 
     def is_piece_on_board(self) -> bool:
         """Check if the piece is currently on the chess board."""
-        has_position = self._position is not None
-        is_not_default_position = self._position != (None, None)
-        return has_position and is_not_default_position
+        return self._position is not None
 
     def place(self, position: Tuple[int, int]) -> None:
         """
@@ -100,11 +97,7 @@ class Chess_Piece(ABC):
         :param position: Position to place the piece as a tuple (x, y)
         :raises ValueError: If the position is invalid or the piece is already on the board
         """
-        position_is_valid = position is not None
-        piece_not_on_board = not self.is_piece_on_board()
-        within_board_limits = self._is_valid_position(position, self._board_size)
-
-        if position_is_valid and piece_not_on_board and within_board_limits:
+        if not self.is_piece_on_board() and self._is_valid_position(position, self._board_size):
             self._position = position
         else:
             raise ValueError("Invalid placement: Position is not valid or piece is already on board.")
@@ -116,7 +109,7 @@ class Chess_Piece(ABC):
         :raises ValueError: If the piece is not on the board
         """
         if self.is_piece_on_board():
-            self._position = (None, None)
+            self._position = None
         else:
             raise ValueError("Cannot remove: Piece is not on the board.")
 
@@ -127,11 +120,7 @@ class Chess_Piece(ABC):
         :param new_position: New position to move the piece to as a tuple (x, y)
         :raises ValueError: If the new position is invalid or the piece is not on the board
         """
-        new_position_is_valid = new_position is not None
-        piece_is_on_board = self.is_piece_on_board()
-        move_is_within_valid_moves = new_position in self.get_valid_moves()
-
-        if new_position_is_valid and piece_is_on_board and move_is_within_valid_moves:
+        if self.is_piece_on_board() and new_position in self.get_valid_moves():
             self._position = new_position
         else:
             raise ValueError("Invalid move: New position is not valid or piece is not on board.")
@@ -143,11 +132,7 @@ class Chess_Piece(ABC):
         :param other_piece: The Chess_Piece object to be taken
         :raises ValueError: If the other piece is invalid or not in a valid position to be taken
         """
-        other_piece_is_valid = other_piece is not None
-        piece_is_on_board = self.is_piece_on_board()
-        other_piece_position_is_valid = other_piece.get_position() in self.get_valid_moves()
-
-        if other_piece_is_valid and piece_is_on_board and other_piece_position_is_valid:
+        if self.is_piece_on_board() and other_piece.get_position() in self.get_valid_moves():
             self._position = other_piece.get_position()
             other_piece.remove()
         else:
