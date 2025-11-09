@@ -28,7 +28,12 @@ class Pawn(Chess_Piece):
 
         :return: A list of tuples representing valid positions the Pawn can move to
         """
-        pass
+        if not self.is_piece_on_board():
+            return []
+
+        valid_moves = []
+
+        return valid_moves
 
     def take(self, other_piece: 'Chess_Piece') -> None:
         """
@@ -37,7 +42,8 @@ class Pawn(Chess_Piece):
         :param other_piece: The Chess_Piece object to be taken
         :raises ValueError: If the other piece is invalid or not in a valid position to be taken
         """
-        pass
+        if not self.is_piece_on_board() or not other_piece.is_piece_on_board():
+            raise ValueError("Invalid take: One or both pieces are not on the board.")
 
     def replace(self, new_piece: 'Chess_Piece') -> None:
         """
@@ -46,7 +52,10 @@ class Pawn(Chess_Piece):
         :param new_piece: The Chess_Piece object to replace the Pawn
         :raises ValueError: If the new piece is already on the board or the Pawn is not on the board
         """
-        pass
+        if not self.is_piece_on_board():
+            raise ValueError("Cannot replace: Pawn is not on the board.")
+        if new_piece.is_piece_on_board():
+            raise ValueError("Cannot replace: New piece is already on the board.")
 
     def __str__(self) -> str:
         """Return a string representation of the Pawn."""
@@ -79,11 +88,17 @@ class Rook(Chess_Piece):
 
         :return: A list of tuples representing valid positions the Rook can move to
         """
-        pass
+        if not self.is_piece_on_board():
+            return []
+
+        valid_moves = []
+
+        return valid_moves
 
     def __str__(self) -> str:
         """Return a string representation of the Rook."""
         return f"Rook({super().__str__()})"
+
 
 class Queen(Rook):
     def __init__(
@@ -111,7 +126,12 @@ class Queen(Rook):
 
         :return: A list of tuples representing valid positions the Queen can move to
         """
-        pass
+        if not self.is_piece_on_board():
+            return []
+
+        valid_moves = []
+
+        return valid_moves
 
     def __str__(self) -> str:
         """Return a string representation of the Queen."""
@@ -144,7 +164,12 @@ class Knight(Chess_Piece):
 
         :return: A list of tuples representing valid positions the Knight can move to
         """
-        pass
+        if not self.is_piece_on_board():
+            return []
+
+        valid_moves = []
+
+        return valid_moves
 
     def __str__(self) -> str:
         """Return a string representation of the Knight."""
@@ -177,7 +202,12 @@ class King(Chess_Piece):
 
         :return: A list of tuples representing valid positions the King can move to
         """
-        pass
+        if not self.is_piece_on_board():
+            return []
+
+        valid_moves = []
+
+        return valid_moves
 
     def __str__(self) -> str:
         """Return a string representation of the King."""
@@ -210,7 +240,12 @@ class Bishop(Chess_Piece):
 
         :return: A list of tuples representing valid positions the Bishop can move to
         """
-        pass
+        if not self.is_piece_on_board():
+            return []
+
+        valid_moves = []
+
+        return valid_moves
 
     def __str__(self) -> str:
         """Return a string representation of the Bishop."""
