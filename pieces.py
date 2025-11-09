@@ -318,6 +318,21 @@ class Bishop(Chess_Piece):
             return []
 
         valid_moves = []
+        x, y = self.position
+
+        for i in range(1, max(self.board_size)):
+            # Upper-right diagonal
+            if self._is_valid_position((x + i, y + i), self.board_size):
+                valid_moves.append((x + i, y + i))
+            # Upper-left diagonal
+            if self._is_valid_position((x - i, y + i), self.board_size):
+                valid_moves.append((x - i, y + i))
+            # Lower-right diagonal
+            if self._is_valid_position((x + i, y - i), self.board_size):
+                valid_moves.append((x + i, y - i))
+            # Lower-left diagonal
+            if self._is_valid_position((x - i, y - i), self.board_size):
+                valid_moves.append((x - i, y - i))
 
         return valid_moves
 
