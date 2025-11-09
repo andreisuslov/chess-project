@@ -125,6 +125,17 @@ class Rook(Chess_Piece):
             return []
 
         valid_moves = []
+        x, y = self.position
+
+        # Horizontal moves
+        for new_x in range(self.board_size[0]):
+            if new_x != x:
+                valid_moves.append((new_x, y))
+
+        # Vertical moves
+        for new_y in range(self.board_size[1]):
+            if new_y != y:
+                valid_moves.append((x, new_y))
 
         return valid_moves
 
