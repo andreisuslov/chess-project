@@ -44,7 +44,7 @@ class Chess_Piece(ABC):
 
     def get_position(self) -> Optional[Tuple[int, int]]:
         """Return the current position of the piece on the board."""
-        return self._position
+        return self._position if self._position is not None else (None, None)
 
     @property
     def color(self) -> str:
@@ -92,51 +92,39 @@ class Chess_Piece(ABC):
 
     def place(self, position: Tuple[int, int]) -> None:
         """
-        Place the piece on the board at the given position.
+        Place the piece on the board at the given position if it's not already on the board.
 
         :param position: Position to place the piece as a tuple (x, y)
-        :raises ValueError: If the position is invalid or the piece is already on the board
         """
         if not self.is_piece_on_board() and self._is_valid_position(position, self._board_size):
             self._position = position
-        else:
-            raise ValueError("Invalid placement: Position is not valid or piece is already on board.")
 
     def remove(self) -> None:
         """
         Remove the piece from the board.
-
-        :raises ValueError: If the piece is not on the board
         """
-        if self.is_piece_on_board():
-            self._position = None
-        else:
-            raise ValueError("Cannot remove: Piece is not on the board.")
+        self._position = None
 
     def move(self, new_position: Tuple[int, int]) -> None:
         """
-        Move the piece to a new position on the board.
+        Move the piece to a new position on the board if it's a valid move.
 
         :param new_position: New position to move the piece to as a tuple (x, y)
-        :raises ValueError: If the new position is invalid or the piece is not on the board
         """
         if self.is_piece_on_board() and new_position in self.get_valid_moves():
             self._position = new_position
-        else:
-            raise ValueError("Invalid move: New position is not valid or piece is not on board.")
 
     def take(self, other_piece: 'Chess_Piece') -> None:
         """
         Take another piece on the board.
 
         :param other_piece: The Chess_Piece object to be taken
-        :raises ValueError: If the other piece is invalid or not in a valid position to be taken
         """
-        if self.is_piece_on_board() and other_piece.get_position() in self.get_valid_moves():
+        if not self.is_piece_on_board() or not other_piece.is_piece_on_board():
+            return
+        if other_piece.get_position() in self.get_valid_moves():
             self._position = other_piece.get_position()
             other_piece.remove()
-        else:
-            raise ValueError("Invalid take: Other piece is not valid or not in a valid position.")
 
     @abstractmethod
     def get_valid_moves(self) -> List[Tuple[int, int]]:
