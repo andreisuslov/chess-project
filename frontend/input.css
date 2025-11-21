@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Board Styles */
+#chess-board {
+    display: grid;
+    grid-template-columns: repeat(8, 60px);
+    grid-template-rows: repeat(8, 60px);
+    border: 5px solid #5d4037;
+    width: 480px;
+    height: 480px;
+    margin: 0 auto;
+}
+
+.square {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.white-square {
+    @apply bg-board-white;
+}
+
+.black-square {
+    @apply bg-board-black;
+}
+
+.selected {
+    background-color: #7b61ff !important;
+}
+
+.valid-move {
+    background-color: #a9ff8c !important;
+    position: relative;
+}
+
+.valid-move::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+}
