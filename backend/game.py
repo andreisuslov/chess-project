@@ -56,6 +56,27 @@ class Game:
         self.turn = "black" if self.turn == "white" else "white"
         return True
 
+    def get_board_state(self):
+        """
+        Return the board state as a list of lists for the frontend.
+        Each cell contains {'type': 'Pawn', 'color': 'white'} or None.
+        """
+        state = []
+        for y in range(self.board.height - 1, -1, -1):
+            row = []
+            for x in range(self.board.width):
+                piece = self.board.get_piece_at((x, y))
+                if piece:
+                    row.append({
+                        'type': piece.__class__.__name__,
+                        'color': piece.color,
+                        'id': piece.ID
+                    })
+                else:
+                    row.append(None)
+            state.append(row)
+        return state
+
     def start_cli(self):
         while True:
             print(self.board)
