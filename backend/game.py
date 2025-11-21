@@ -34,6 +34,8 @@ class Game:
             self.board.place_piece(Pawn(f"BP{i+1}", (i, 6), "black", "DOWN"), (i, 6))
 
     def play_turn(self, start_pos: Tuple[int, int], end_pos: Tuple[int, int]) -> bool:
+        start_pos = tuple(start_pos)
+        end_pos = tuple(end_pos)
         piece = self.board.get_piece_at(start_pos)
         
         if not piece:
