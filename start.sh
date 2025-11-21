@@ -6,6 +6,7 @@
 echo "🚀 Starting Chess Project..."
 echo ""
 
+
 # Get the directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
@@ -26,7 +27,7 @@ echo ""
 # Step 3: Find an available port or check if this project is already running
 find_available_port() {
     local port=$1
-    local max_port=$((port + 100))  # Try up to 100 ports
+    local max_port=$((port + 5))  # Try up to 100 ports
     
     while [ $port -lt $max_port ]; do
         # Check if port is in use
@@ -67,6 +68,9 @@ if [[ $result == ALREADY_RUNNING:* ]]; then
     echo "  ✨ Chess Project is already running!"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
+    echo "🎨 Rebuilding CSS..."
+    npm run build:css
+    echo "✅ CSS rebuilt successfully"
     echo "  📍 Local:   http://localhost:$port"
     echo "  📂 Serving: ./"
     echo ""
