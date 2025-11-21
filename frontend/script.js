@@ -1,25 +1,47 @@
 let pyodide;
 let pythonGame;
 let selectedSquare = null;
+let boardFlipped = false;
 
 // Dark Mode Logic
 const themeToggleBtn = document.getElementById('theme-toggle');
 const htmlElement = document.documentElement;
+const sunIcon = document.getElementById('sun-icon');
+const moonIcon = document.getElementById('moon-icon');
+
+// Function to update icon visibility
+function updateThemeIcons(isDark) {
+    if (isDark) {
+        sunIcon.classList.remove('hidden');
+        sunIcon.classList.add('block');
+        moonIcon.classList.remove('block');
+        moonIcon.classList.add('hidden');
+    } else {
+        sunIcon.classList.remove('block');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+        moonIcon.classList.add('block');
+    }
+}
 
 // Check for saved user preference, if any, on load
-if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+const isDarkMode = localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+if (isDarkMode) {
     htmlElement.classList.add('dark');
 } else {
     htmlElement.classList.remove('dark');
 }
+updateThemeIcons(isDarkMode);
 
 themeToggleBtn.addEventListener('click', function() {
     if (htmlElement.classList.contains('dark')) {
         htmlElement.classList.remove('dark');
         localStorage.setItem('color-theme', 'light');
+        updateThemeIcons(false);
     } else {
         htmlElement.classList.add('dark');
         localStorage.setItem('color-theme', 'dark');
+        updateThemeIcons(true);
     }
 });
 
@@ -76,9 +98,15 @@ function renderBoard() {
     // So state[0] is row 7 (Black pieces), state[7] is row 0 (White pieces).
     const state = pythonGame.get_board_state().toJs();
 
-    for (let y = 0; y < 8; y++) { // y index in state list (0 to 7) -> corresponds to board y (7 to 0)
+    // Determine rendering order based on flip state
+    const yRange = boardFlipped ? [7, 6, 5, 4, 3, 2, 1, 0] : [0, 1, 2, 3, 4, 5, 6, 7];
+    const xRange = boardFlipped ? [7, 6, 5, 4, 3, 2, 1, 0] : [0, 1, 2, 3, 4, 5, 6, 7];
+
+    for (let yi = 0; yi < 8; yi++) { 
+        const y = yRange[yi];
         const row = state[y];
-        for (let x = 0; x < 8; x++) {
+        for (let xi = 0; xi < 8; xi++) {
+            const x = xRange[xi];
             const cellData = row[x];
             const square = document.createElement('div');
             square.className = `square ${(x + y) % 2 === 0 ? 'white-square' : 'black-square'}`;
@@ -195,6 +223,12 @@ function resetGame() {
         renderBoard();
         log("Game reset");
     }
+}
+
+function flipBoard() {
+    boardFlipped = !boardFlipped;
+    renderBoard();
+    log(`Board ${boardFlipped ? 'flipped to black\'s perspective' : 'reset to white\'s perspective'}`);
 }
 
 window.onload = initPyodide;
