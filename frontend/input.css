@@ -2,12 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --board-white: #f0d9b5;
+    --board-black: #b58863;
+    --board-darker-black: #5d4037;
+    --board-selected: #f6eb61;
+}
+
+.btn-board {
+    @apply bg-board-black text-white hover:bg-board-darker-black transition-colors duration-300;
+}
+
 /* Custom Board Styles */
 #chess-board {
     display: grid;
     grid-template-columns: repeat(8, 60px);
     grid-template-rows: repeat(8, 60px);
-    border: 5px solid #5d4037;
     width: 480px;
     height: 480px;
     margin: 0 auto;
@@ -22,6 +32,18 @@
     font-size: 40px;
     cursor: pointer;
     user-select: none;
+    font-family: "Apple Symbols", "Segoe UI Symbol", "DejaVu Sans", Symbola, sans-serif;
+    font-variant-emoji: text;
+}
+
+.square[data-color="white"] {
+    color: #ffffff !important;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.square[data-color="black"] {
+    color: #000000 !important;
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
 }
 
 .white-square {
@@ -33,7 +55,7 @@
 }
 
 .selected {
-    background-color: #7b61ff !important;
+    background-color: var(--board-selected) !important;
 }
 
 .valid-move {

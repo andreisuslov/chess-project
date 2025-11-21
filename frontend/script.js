@@ -9,48 +9,30 @@ const htmlElement = document.documentElement;
 const sunIcon = document.getElementById('sun-icon');
 const moonIcon = document.getElementById('moon-icon');
 
-// Function to update icon visibility
-function updateThemeIcons(isDark) {
-    if (isDark) {
-        sunIcon.classList.remove('hidden');
-        sunIcon.classList.add('block');
-        moonIcon.classList.remove('block');
-        moonIcon.classList.add('hidden');
-    } else {
-        sunIcon.classList.remove('block');
-        sunIcon.classList.add('hidden');
-        moonIcon.classList.remove('hidden');
-        moonIcon.classList.add('block');
-    }
-}
-
-// Check for saved user preference, if any, on load
-const isDarkMode = localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+// Check for saved user preference, if any, on load (default to light mode)
+const isDarkMode = localStorage.getItem('color-theme') === 'dark';
 if (isDarkMode) {
     htmlElement.classList.add('dark');
 } else {
     htmlElement.classList.remove('dark');
 }
-updateThemeIcons(isDarkMode);
 
 themeToggleBtn.addEventListener('click', function() {
     if (htmlElement.classList.contains('dark')) {
         htmlElement.classList.remove('dark');
         localStorage.setItem('color-theme', 'light');
-        updateThemeIcons(false);
     } else {
         htmlElement.classList.add('dark');
         localStorage.setItem('color-theme', 'dark');
-        updateThemeIcons(true);
     }
 });
 
 const pieceSymbols = {
     'white': {
-        'King': '♔', 'Queen': '♕', 'Rook': '♖', 'Bishop': '♗', 'Knight': '♘', 'Pawn': '♙'
+        'King': '♔\uFE0E', 'Queen': '♕\uFE0E', 'Rook': '♖\uFE0E', 'Bishop': '♗\uFE0E', 'Knight': '♘\uFE0E', 'Pawn': '♟\uFE0E'
     },
     'black': {
-        'King': '♚', 'Queen': '♛', 'Rook': '♜', 'Bishop': '♝', 'Knight': '♞', 'Pawn': '♟'
+        'King': '♚\uFE0E', 'Queen': '♛\uFE0E', 'Rook': '♜\uFE0E', 'Bishop': '♝\uFE0E', 'Knight': '♞\uFE0E', 'Pawn': '♟\uFE0E'
     }
 };
 

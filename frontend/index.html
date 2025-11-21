@@ -10,21 +10,22 @@
 <body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex items-center justify-center font-sans transition-colors duration-300">
     <div class="container mx-auto text-center bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg max-w-2xl transition-colors duration-300">
         <div class="flex justify-between mb-4">
-            <button onclick="flipBoard()" class="px-4 py-2 text-sm font-medium bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors duration-300">Flip Board</button>
+            <div class="flex gap-2">
+                <button onclick="flipBoard()" class="px-4 py-2 text-sm font-medium rounded focus:outline-none focus:ring-2 btn-board">Flip Board</button>
+                <button onclick="resetGame()" class="px-4 py-2 text-sm font-medium rounded focus:outline-none focus:ring-2 btn-board">Reset Game</button>
+            </div>
             <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none transition-colors duration-300">
-                <!-- Sun Icon -->
-                <svg id="sun-icon" class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                <!-- Moon Icon -->
-                <svg id="moon-icon" class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 24.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <!-- Moon Icon (shows in dark mode, click to switch to light) -->
+                <svg id="moon-icon" class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <!-- Sun Icon (shows in light mode, click to switch to dark) -->
+                <svg id="sun-icon" class="w-6 h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 <span class="sr-only">Toggle Dark Mode</span>
             </button>
         </div>
-        <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-6">Simple Chess Engine</h1>
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-1">Simple Chess Engine</h1>
         <div id="status" class="mb-4 font-bold text-gray-600 dark:text-gray-300 min-h-[1.5em] p-2 rounded transition-colors duration-300">Loading Pyodide...</div>
-        <div id="chess-board" class="mx-auto shadow-md"></div>
-        <div id="controls" class="mt-6">
-            <button onclick="resetGame()" class="px-6 py-2 text-lg font-medium bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition-colors duration-300">Reset Game</button>
-        </div>
+        <div id="chess-board" class="mx-auto"></div>
+
         <div id="log" class="mt-4 text-sm text-gray-500 dark:text-gray-400 max-h-32 overflow-y-auto text-left bg-gray-50 dark:bg-gray-900 p-2 rounded border border-gray-200 dark:border-gray-700"></div>
     </div>
     <script src="script.js"></script>

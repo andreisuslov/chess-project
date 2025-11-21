@@ -41,7 +41,7 @@ h1 {
     display: grid;
     grid-template-columns: repeat(8, 60px);
     grid-template-rows: repeat(8, 60px);
-    border: 5px solid #5d4037;
+    /* border: 5px solid #5d4037; */
     width: 480px;
     height: 480px;
     margin: 0 auto;
@@ -58,6 +58,16 @@ h1 {
     user-select: none;
 }
 
+.square[data-color="white"] {
+    color: #ffffff;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.square[data-color="black"] {
+    color: #000000;
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+}
+
 .white-square {
     background-color: #f0d9b5;
 }
@@ -67,7 +77,7 @@ h1 {
 }
 
 .selected {
-    background-color: #7b61ff !important;
+    background-color: #fce510 !important;
 }
 
 .valid-move {
@@ -93,14 +103,14 @@ button {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #4CAF50;
+    background-color: #b58863;
     color: white;
     border: none;
     border-radius: 4px;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #b58863;
 }
 
 #log {
