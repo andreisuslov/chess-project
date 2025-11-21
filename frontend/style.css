@@ -13,7 +13,7 @@ body {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -26,6 +26,15 @@ h1 {
     font-weight: bold;
     color: #555;
     min-height: 1.2em;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.highlight {
+    background-color: #fff9c4;
+    /* Light yellow highlight */
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
 }
 
 #chess-board {
@@ -62,7 +71,8 @@ h1 {
 }
 
 .valid-move {
-    background-color: #a9ff8c !important; /* Or a dot indicator */
+    background-color: #a9ff8c !important;
+    /* Or a dot indicator */
     position: relative;
 }
 
@@ -71,7 +81,7 @@ h1 {
     position: absolute;
     width: 15px;
     height: 15px;
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgba(0, 0, 0, 0.2);
     border-radius: 50%;
 }
 

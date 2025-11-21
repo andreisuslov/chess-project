@@ -111,7 +111,10 @@ async function handleSquareClick(x, y) {
                 const player = playerColor.charAt(0).toUpperCase() + playerColor.slice(1);
                 log(`${player} moved from (${startX},${startY}) to (${x},${y})`);
                 selectedSquare = null;
-                document.getElementById('status').innerText = `${pythonGame.turn.charAt(0).toUpperCase() + pythonGame.turn.slice(1)}'s turn`;
+                const statusEl = document.getElementById('status');
+                statusEl.innerText = `${pythonGame.turn.charAt(0).toUpperCase() + pythonGame.turn.slice(1)}'s turn`;
+                statusEl.classList.add('highlight');
+                setTimeout(() => statusEl.classList.remove('highlight'), 500);
             } else {
                 log("Invalid move");
                 // Check if clicked on own piece to switch selection
