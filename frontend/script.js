@@ -105,11 +105,13 @@ async function handleSquareClick(x, y) {
         // play_turn((x1, y1), (x2, y2))
         
         try {
+            const playerColor = pythonGame.turn;
             const success = pythonGame.play_turn([startX, startY], [x, y]);
             if (success) {
-                log(`Moved from (${startX},${startY}) to (${x},${y})`);
+                const player = playerColor.charAt(0).toUpperCase() + playerColor.slice(1);
+                log(`${player} moved from (${startX},${startY}) to (${x},${y})`);
                 selectedSquare = null;
-                document.getElementById('status').innerText = `${pythonGame.turn.charAt(0).toUpperCase() + pythonGame.turn.slice(1)}'s Turn`;
+                document.getElementById('status').innerText = `${pythonGame.turn.charAt(0).toUpperCase() + pythonGame.turn.slice(1)}'s turn`;
             } else {
                 log("Invalid move");
                 // Check if clicked on own piece to switch selection
