@@ -30,10 +30,11 @@ class Pawn(Chess_Piece):
         """
         super().place(position)
 
-    def get_valid_moves(self) -> List[Tuple[int, int]]:
+    def get_valid_moves(self, board: Optional['Board'] = None) -> List[Tuple[int, int]]:
         """
         Get a list of valid moves for the Pawn.
 
+        :param board: The Board object to check for collisions (optional)
         :return: A list of tuples representing valid positions the Pawn can move to
         """
         if not self.is_piece_on_board():
@@ -46,16 +47,29 @@ class Pawn(Chess_Piece):
         # Move one space forward
         new_y = y + direction_modifier
         if self._is_valid_position((x, new_y), self.get_board_size()):
-            valid_moves.append((x, new_y))
+            # Check collision if board is provided
+            if board is None or board.get_piece_at((x, new_y)) is None:
+                valid_moves.append((x, new_y))
 
-            # Check if it's the Pawn's first move
-            is_first_move_up = self.get_direction() == "UP" and y == 1
-            is_first_move_down = self.get_direction() == "DOWN" and y == self.get_board_size()[1] - 2
+                # Check if it's the Pawn's first move
+                is_first_move_up = self.get_direction() == "UP" and y == 1
+                is_first_move_down = self.get_direction() == "DOWN" and y == self.get_board_size()[1] - 2
 
-            if is_first_move_up or is_first_move_down:
-                new_y = y + 2 * direction_modifier
-                if self._is_valid_position((x, new_y), self.get_board_size()):
-                    valid_moves.append((x, new_y))
+                if is_first_move_up or is_first_move_down:
+                    new_y_2 = y + 2 * direction_modifier
+                    if self._is_valid_position((x, new_y_2), self.get_board_size()):
+                        if board is None or board.get_piece_at((x, new_y_2)) is None:
+                            valid_moves.append((x, new_y_2))
+        
+        # Captures
+        if board:
+            for dx in [-1, 1]:
+                capture_x = x + dx
+                capture_y = y + direction_modifier
+                if self._is_valid_position((capture_x, capture_y), self.get_board_size()):
+                    piece_at_target = board.get_piece_at((capture_x, capture_y))
+                    if piece_at_target and piece_at_target.color != self.color:
+                        valid_moves.append((capture_x, capture_y))
 
         return valid_moves
 
@@ -134,10 +148,11 @@ class Rook(Chess_Piece):
         """
         super().__init__(ID, initial_position, color, direction, board_size)
 
-    def get_valid_moves(self) -> List[Tuple[int, int]]:
+    def get_valid_moves(self, board: Optional['Board'] = None) -> List[Tuple[int, int]]:
         """
         Get a list of valid moves for the Rook.
 
+        :param board: The Board object to check for collisions (optional)
         :return: A list of tuples representing valid positions the Rook can move to
         """
         if not self.is_piece_on_board():
@@ -145,16 +160,23 @@ class Rook(Chess_Piece):
 
         valid_moves = []
         x, y = self.position
+        
+        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
-        # Horizontal moves
-        for new_x in range(self.board_size[0]):
-            if new_x != x:
-                valid_moves.append((new_x, y))
-
-        # Vertical moves
-        for new_y in range(self.board_size[1]):
-            if new_y != y:
-                valid_moves.append((x, new_y))
+        for dx, dy in directions:
+            for i in range(1, max(self.board_size)):
+                new_x, new_y = x + dx * i, y + dy * i
+                if not self._is_valid_position((new_x, new_y), self.board_size):
+                    break
+                
+                if board:
+                    piece_at_target = board.get_piece_at((new_x, new_y))
+                    if piece_at_target:
+                        if piece_at_target.color != self.color:
+                            valid_moves.append((new_x, new_y))
+                        break # Blocked by piece (friend or foe)
+                
+                valid_moves.append((new_x, new_y))
 
         return valid_moves
 
@@ -183,34 +205,39 @@ class Queen(Rook):
         """
         super().__init__(ID, initial_position, color, direction, board_size)
 
-    def get_valid_moves(self) -> List[Tuple[int, int]]:
+    def get_valid_moves(self, board: Optional['Board'] = None) -> List[Tuple[int, int]]:
         """
         Get a list of valid moves for the Queen.
 
+        :param board: The Board object to check for collisions (optional)
         :return: A list of tuples representing valid positions the Queen can move to
         """
         if not self.is_piece_on_board():
             return []
 
-        # Start with the Rook's valid moves (horizontal and vertical)
-        valid_moves = super().get_valid_moves()
-
+        valid_moves = []
         x, y = self.position
+        
+        # Combine Rook (straight) and Bishop (diagonal) directions
+        directions = [
+            (0, 1), (0, -1), (1, 0), (-1, 0), # Straight
+            (1, 1), (1, -1), (-1, 1), (-1, -1) # Diagonal
+        ]
 
-        # Add diagonal moves
-        for i in range(1, max(self.board_size)):
-            # Upper-right diagonal
-            if self._is_valid_position((x + i, y + i), self.board_size):
-                valid_moves.append((x + i, y + i))
-            # Upper-left diagonal
-            if self._is_valid_position((x - i, y + i), self.board_size):
-                valid_moves.append((x - i, y + i))
-            # Lower-right diagonal
-            if self._is_valid_position((x + i, y - i), self.board_size):
-                valid_moves.append((x + i, y - i))
-            # Lower-left diagonal
-            if self._is_valid_position((x - i, y - i), self.board_size):
-                valid_moves.append((x - i, y - i))
+        for dx, dy in directions:
+            for i in range(1, max(self.board_size)):
+                new_x, new_y = x + dx * i, y + dy * i
+                if not self._is_valid_position((new_x, new_y), self.board_size):
+                    break
+                
+                if board:
+                    piece_at_target = board.get_piece_at((new_x, new_y))
+                    if piece_at_target:
+                        if piece_at_target.color != self.color:
+                            valid_moves.append((new_x, new_y))
+                        break # Blocked
+                
+                valid_moves.append((new_x, new_y))
 
         return valid_moves
 
@@ -239,10 +266,11 @@ class Knight(Chess_Piece):
         """
         super().__init__(ID, initial_position, color, direction, board_size)
 
-    def get_valid_moves(self) -> List[Tuple[int, int]]:
+    def get_valid_moves(self, board: Optional['Board'] = None) -> List[Tuple[int, int]]:
         """
         Get a list of valid moves for the Knight.
 
+        :param board: The Board object to check for collisions (optional)
         :return: A list of tuples representing valid positions the Knight can move to
         """
         if not self.is_piece_on_board():
@@ -256,7 +284,16 @@ class Knight(Chess_Piece):
             (x - 1, y + 2), (x - 1, y - 2)
         ]
 
-        return [move for move in potential_moves if self._is_valid_position(move, self.board_size)]
+        valid_moves = []
+        for move in potential_moves:
+            if self._is_valid_position(move, self.board_size):
+                if board:
+                    piece_at_target = board.get_piece_at(move)
+                    if piece_at_target and piece_at_target.color == self.color:
+                        continue # Blocked by friendly piece
+                valid_moves.append(move)
+
+        return valid_moves
 
     def __str__(self) -> str:
         """Return a string representation of the Knight."""
@@ -283,10 +320,11 @@ class King(Chess_Piece):
         """
         super().__init__(ID, initial_position, color, direction, board_size)
 
-    def get_valid_moves(self) -> List[Tuple[int, int]]:
+    def get_valid_moves(self, board: Optional['Board'] = None) -> List[Tuple[int, int]]:
         """
         Get a list of valid moves for the King.
 
+        :param board: The Board object to check for collisions (optional)
         :return: A list of tuples representing valid positions the King can move to
         """
         if not self.is_piece_on_board():
@@ -300,7 +338,16 @@ class King(Chess_Piece):
             (x - 1, y + 1), (x - 1, y - 1)
         ]
 
-        return [move for move in potential_moves if self._is_valid_position(move, self.board_size)]
+        valid_moves = []
+        for move in potential_moves:
+            if self._is_valid_position(move, self.board_size):
+                if board:
+                    piece_at_target = board.get_piece_at(move)
+                    if piece_at_target and piece_at_target.color == self.color:
+                        continue # Blocked by friendly piece
+                valid_moves.append(move)
+
+        return valid_moves
 
     def __str__(self) -> str:
         """Return a string representation of the King."""
@@ -327,10 +374,11 @@ class Bishop(Chess_Piece):
         """
         super().__init__(ID, initial_position, color, direction, board_size)
 
-    def get_valid_moves(self) -> List[Tuple[int, int]]:
+    def get_valid_moves(self, board: Optional['Board'] = None) -> List[Tuple[int, int]]:
         """
         Get a list of valid moves for the Bishop.
 
+        :param board: The Board object to check for collisions (optional)
         :return: A list of tuples representing valid positions the Bishop can move to
         """
         if not self.is_piece_on_board():
@@ -338,20 +386,23 @@ class Bishop(Chess_Piece):
 
         valid_moves = []
         x, y = self.position
+        
+        directions = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
 
-        for i in range(1, max(self.board_size)):
-            # Upper-right diagonal
-            if self._is_valid_position((x + i, y + i), self.board_size):
-                valid_moves.append((x + i, y + i))
-            # Upper-left diagonal
-            if self._is_valid_position((x - i, y + i), self.board_size):
-                valid_moves.append((x - i, y + i))
-            # Lower-right diagonal
-            if self._is_valid_position((x + i, y - i), self.board_size):
-                valid_moves.append((x + i, y - i))
-            # Lower-left diagonal
-            if self._is_valid_position((x - i, y - i), self.board_size):
-                valid_moves.append((x - i, y - i))
+        for dx, dy in directions:
+            for i in range(1, max(self.board_size)):
+                new_x, new_y = x + dx * i, y + dy * i
+                if not self._is_valid_position((new_x, new_y), self.board_size):
+                    break
+                
+                if board:
+                    piece_at_target = board.get_piece_at((new_x, new_y))
+                    if piece_at_target:
+                        if piece_at_target.color != self.color:
+                            valid_moves.append((new_x, new_y))
+                        break # Blocked
+                
+                valid_moves.append((new_x, new_y))
 
         return valid_moves
 

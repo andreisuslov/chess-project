@@ -92,11 +92,11 @@ class Chess_Piece(ABC):
 
     def place(self, position: Tuple[int, int]) -> None:
         """
-        Place the piece on the board at the given position if it's not already on the board.
+        Place the piece on the board at the given position.
 
         :param position: Position to place the piece as a tuple (x, y)
         """
-        if not self.is_piece_on_board() and self._is_valid_position(position, self._board_size):
+        if self._is_valid_position(position, self._board_size):
             self._position = position
 
     def remove(self) -> None:
@@ -127,10 +127,11 @@ class Chess_Piece(ABC):
             other_piece.remove()
 
     @abstractmethod
-    def get_valid_moves(self) -> List[Tuple[int, int]]:
+    def get_valid_moves(self, board: Optional['Board'] = None) -> List[Tuple[int, int]]:
         """
         Get a list of valid moves for the piece.
 
+        :param board: The Board object to check for collisions (optional)
         :return: A list of tuples representing valid positions the piece can move to
         """
         pass
