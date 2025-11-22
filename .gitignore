@@ -314,7 +314,6 @@ dist
 ### Tailwind CSS
 # Tailwind build output (if building separately)
 frontend/dist/
-frontend/output.css
 
 ### Build and dist folders
 dist/
