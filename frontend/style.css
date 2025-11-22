@@ -38,21 +38,22 @@ h1 {
 
 #chess-board {
     display: grid;
-    grid-template-columns: repeat(8, 80px);
-    grid-template-rows: repeat(8, 80px);
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
     /* border: 5px solid #5d4037; */
-    width: 640px;
-    height: 640px;
+    width: 100%;
+    max-width: min(640px, 95vw);
+    aspect-ratio: 1 / 1;
     margin: 0 auto;
 }
 
 .square {
-    width: 80px;
-    height: 80px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 50px;
+    font-size: clamp(30px, 6vw, 50px);
     cursor: pointer;
     user-select: none;
 }

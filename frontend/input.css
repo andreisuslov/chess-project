@@ -17,20 +17,21 @@
 /* Custom Board Styles */
 #chess-board {
     display: grid;
-    grid-template-columns: repeat(8, 60px);
-    grid-template-rows: repeat(8, 60px);
-    width: 480px;
-    height: 480px;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    width: 100%;
+    max-width: min(480px, 95vw);
+    aspect-ratio: 1 / 1;
     margin: 0 auto;
 }
 
 .square {
-    width: 60px;
-    height: 60px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 40px;
+    font-size: clamp(24px, 5vw, 40px);
     cursor: pointer;
     user-select: none;
     font-family: "Apple Symbols", "Segoe UI Symbol", "DejaVu Sans", Symbola, sans-serif;
@@ -109,5 +110,28 @@
         width: 100% !important;
         max-width: 100% !important;
         flex: 1 1 100% !important;
+    }
+    
+    #chess-board {
+        max-width: min(400px, 90vw);
+    }
+    
+    .square {
+        font-size: clamp(20px, 4.5vw, 32px);
+    }
+}
+
+/* Extra small screens (phones) */
+@media (max-width: 640px) {
+    #chess-board {
+        max-width: 95vw;
+    }
+    
+    .square {
+        font-size: clamp(18px, 4vw, 28px);
+    }
+    
+    #main-board-section {
+        padding: 1rem !important;
     }
 }
