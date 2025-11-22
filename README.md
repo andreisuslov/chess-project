@@ -1,6 +1,8 @@
 # Chess Project
 
-A chess game with custom backend and a beautiful UI, in both light and dark themes, built with vanilla JS, Tailwind CSS, and Python.
+A chess game with custom backend and a beautiful UI, in both light and dark themes, built with vanilla JS, Tailwind CSS, and Pyodide Python.
+
+> **Note**: This project uses [Pyodide](https://pyodide.org/) to run Python code in the browser. No server-side Python installation is required.
 
 ## 🚀 Quick Start
 
