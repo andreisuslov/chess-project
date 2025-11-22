@@ -46,7 +46,7 @@ async function initPyodide() {
     
     for (const file of files) {
         try {
-            const response = await fetch(`../backend/${file}`);
+            const response = await fetch(`../backend/${file}?t=${new Date().getTime()}`);
             if (!response.ok) throw new Error(`Failed to fetch ${file}`);
             const content = await response.text();
             pyodide.FS.writeFile(file, content);
@@ -137,25 +137,55 @@ async function handleSquareClick(x, y) {
         
         try {
             const playerColor = pythonGame.turn;
-            const success = pythonGame.play_turn([startX, startY], [x, y]);
+            const responseProxy = pythonGame.play_turn([startX, startY], [x, y]);
+            let response;
+            if (responseProxy && typeof responseProxy.toJs === 'function') {
+                response = responseProxy.toJs();
+            } else {
+                console.warn("play_turn returned unexpected type:", responseProxy);
+                response = new Map();
+                response.set('success', !!responseProxy);
+                response.set('message', "Unexpected response from game engine");
+            }
+
+            const success = response.get('success');
+            const message = response.get('message');
+            const captured = response.get('captured');
+            const isCheck = response.get('is_check');
+            const isCheckmate = response.get('is_checkmate');
+            const winner = response.get('winner');
+            
+            if (responseProxy && typeof responseProxy.destroy === 'function') {
+                responseProxy.destroy();
+            }
+
             if (success) {
                 const player = playerColor.charAt(0).toUpperCase() + playerColor.slice(1);
                 log(`${player} moved from (${startX},${startY}) to (${x},${y})`);
+                
+                if (captured) {
+                    log(`Captured ${captured}!`);
+                }
+                
+                if (message && message !== "Move successful") {
+                    log(message);
+                }
+
                 selectedSquare = null;
                 const statusEl = document.getElementById('status');
-                statusEl.innerText = `${pythonGame.turn.charAt(0).toUpperCase() + pythonGame.turn.slice(1)}'s turn`;
+                
+                if (isCheckmate) {
+                    statusEl.innerText = `Checkmate! ${winner} wins!`;
+                } else if (isCheck) {
+                    statusEl.innerText = `${pythonGame.turn.charAt(0).toUpperCase() + pythonGame.turn.slice(1)}'s turn (Check!)`;
+                } else {
+                    statusEl.innerText = `${pythonGame.turn.charAt(0).toUpperCase() + pythonGame.turn.slice(1)}'s turn`;
+                }
+                
                 statusEl.classList.add('highlight');
                 setTimeout(() => statusEl.classList.remove('highlight'), 500);
             } else {
-                log("Invalid move");
-                // Check if clicked on own piece to switch selection
-                // But we need to know if there is a piece there.
-                // We can check the UI state or ask Python.
-                // Simple way: if move failed, and clicked square has own piece, select it.
-                // For now, just deselect if invalid move, or keep selected?
-                // Let's try to select the new square if it has our piece
-                // But we need to know what's at x,y.
-                // Let's just deselect for simplicity or let user click again.
+                log(message || "Invalid move");
                 selectedSquare = null; 
             }
         } catch (e) {

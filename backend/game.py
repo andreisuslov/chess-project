@@ -33,30 +33,125 @@ class Game:
         for i in range(8):
             self.board.place_piece(Pawn(f"BP{i+1}", (i, 6), "black", "DOWN"), (i, 6))
 
-    def play_turn(self, start_pos: Tuple[int, int], end_pos: Tuple[int, int]) -> bool:
+    def is_check(self, color: str) -> bool:
+        king_pos = None
+        # Find King
+        for y in range(self.board.height):
+            for x in range(self.board.width):
+                p = self.board.get_piece_at((x, y))
+                if p and p.color == color and isinstance(p, King):
+                    king_pos = (x, y)
+                    break
+            if king_pos: break
+        
+        if not king_pos: return False
+
+        opponent_color = "black" if color == "white" else "white"
+        
+        # Check if any opponent piece attacks King
+        for y in range(self.board.height):
+            for x in range(self.board.width):
+                p = self.board.get_piece_at((x, y))
+                if p and p.color == opponent_color:
+                    if king_pos in p.get_valid_moves(self.board):
+                        return True
+        return False
+
+    def is_checkmate(self, color: str) -> bool:
+        if not self.is_check(color):
+            return False
+        
+        # Try all possible moves for 'color'
+        pieces = []
+        for y in range(self.board.height):
+            for x in range(self.board.width):
+                p = self.board.get_piece_at((x, y))
+                if p and p.color == color:
+                    pieces.append(p)
+        
+        for p in pieces:
+            start_pos = p.get_position()
+            valid_moves = p.get_valid_moves(self.board)
+            for move in valid_moves:
+                # Simulate move
+                captured_piece = self.board.get_piece_at(move)
+                
+                # Move
+                self.board.move_piece(p, move)
+                
+                still_in_check = self.is_check(color)
+                
+                # Undo move
+                self.board.move_piece(p, start_pos)
+                if captured_piece:
+                    self.board.place_piece(captured_piece, move)
+                
+                if not still_in_check:
+                    return False
+        
+        return True
+
+    def play_turn(self, start_pos: Tuple[int, int], end_pos: Tuple[int, int]) -> dict:
         start_pos = tuple(start_pos)
         end_pos = tuple(end_pos)
         piece = self.board.get_piece_at(start_pos)
         
+        response = {
+            'success': False,
+            'message': '',
+            'captured': None,
+            'is_check': False,
+            'is_checkmate': False,
+            'winner': None
+        }
+
         if not piece:
-            print("No piece at start position.")
-            return False
+            response['message'] = "No piece at start position."
+            return response
         
         if piece.color != self.turn:
-            print(f"It's {self.turn}'s turn. You cannot move {piece.color} pieces.")
-            return False
+            response['message'] = f"It's {self.turn}'s turn. You cannot move {piece.color} pieces."
+            return response
         
         valid_moves = piece.get_valid_moves(self.board)
         if end_pos not in valid_moves:
-            print(f"Invalid move for {piece.__class__.__name__} at {start_pos} to {end_pos}.")
-            return False
+            response['message'] = f"Invalid move for {piece.__class__.__name__} at {start_pos} to {end_pos}."
+            return response
         
-        # Execute move
+        # Check if move puts own king in check (illegal move in chess)
+        # Simulate move
+        captured_piece = self.board.get_piece_at(end_pos)
         self.board.move_piece(piece, end_pos)
         
+        if self.is_check(self.turn):
+            # Undo move
+            self.board.move_piece(piece, start_pos)
+            if captured_piece:
+                self.board.place_piece(captured_piece, end_pos)
+            response['message'] = "Illegal move: You are in check!"
+            return response
+
+        if captured_piece:
+            response['captured'] = captured_piece.__class__.__name__
+
         # Switch turn
-        self.turn = "black" if self.turn == "white" else "white"
-        return True
+        opponent_color = "black" if self.turn == "white" else "white"
+        self.turn = opponent_color
+        
+        # Check for check/checkmate against opponent
+        if self.is_check(self.turn):
+            response['is_check'] = True
+            if self.is_checkmate(self.turn):
+                response['is_checkmate'] = True
+                response['winner'] = "White" if self.turn == "black" else "Black"
+                response['message'] = f"Checkmate! {response['winner']} wins!"
+            else:
+                response['message'] = "Check!"
+        else:
+            response['message'] = "Move successful"
+
+        response['success'] = True
+        return response
 
     def get_board_state(self):
         """
@@ -92,10 +187,14 @@ class Game:
                 x1, y1 = map(int, start_str.split(','))
                 x2, y2 = map(int, end_str.split(','))
                 
-                if self.play_turn((x1, y1), (x2, y2)):
-                    print("Move successful!")
-                else:
-                    print("Move failed, try again.")
+                result = self.play_turn((x1, y1), (x2, y2))
+                print(result['message'])
+                if result['captured']:
+                    print(f"Captured {result['captured']}")
+                if result['is_checkmate']:
+                    print("Game Over")
+                    break
+
             except ValueError:
                 print("Invalid input format. Use 'x1,y1 x2,y2'.")
             except Exception as e:
