@@ -76,3 +76,38 @@
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 50%;
 }
+
+/* Sidebar should match main board section height */
+#board-layout-sidebar {
+    overflow: visible;
+    height: 100%;
+}
+
+/* Ensure sidebar matches board height and only #log scrolls on larger screens */
+@media (min-width: 1024px) {
+    #board {
+        align-items: stretch;
+    }
+
+    #board-layout-sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100%;
+    }
+
+    #board-layout-sidebar #log {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+        height: 100% !important;
+    }
+}
+
+/* Responsive: main board takes full width on smaller screens */
+@media (max-width: 1023px) {
+    #main-board-section {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+}
