@@ -131,8 +131,16 @@ class Game:
             response['message'] = "Illegal move: You are in check!"
             return response
 
+        response['moved_piece'] = {
+            'type': piece.__class__.__name__,
+            'color': piece.color
+        }
+
         if captured_piece:
-            response['captured'] = captured_piece.__class__.__name__
+            response['captured_piece'] = {
+                'type': captured_piece.__class__.__name__,
+                'color': captured_piece.color
+            }
 
         # Switch turn
         opponent_color = "black" if self.turn == "white" else "white"

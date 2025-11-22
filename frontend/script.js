@@ -160,16 +160,32 @@ async function handleSquareClick(x, y) {
             }
 
             if (success) {
-                const player = playerColor.charAt(0).toUpperCase() + playerColor.slice(1);
-                log(`${player} moved from (${startX},${startY}) to (${x},${y})`);
+                const movedPieceMap = response.get('moved_piece');
+                const movedType = movedPieceMap.get('type');
+                const movedColor = movedPieceMap.get('color');
+                const player = movedColor.charAt(0).toUpperCase() + movedColor.slice(1);
                 
-                if (captured) {
-                    log(`Captured ${captured}!`);
+                const capturedPieceMap = response.get('captured_piece');
+                
+                let logMsg = "";
+                
+                if (capturedPieceMap) {
+                    const capturedType = capturedPieceMap.get('type');
+                    const capturedColor = capturedPieceMap.get('color');
+                    const capturedColorCap = capturedColor.charAt(0).toUpperCase() + capturedColor.slice(1);
+                    
+                    logMsg = `${player} ${movedType} captured ${capturedColorCap} ${capturedType} at (${x},${y})`;
+                } else {
+                    logMsg = `${player} ${movedType} moved from (${startX},${startY}) to (${x},${y})`;
                 }
                 
-                if (message && message !== "Move successful") {
-                    log(message);
+                if (isCheckmate) {
+                    logMsg += ` - Checkmate`;
+                } else if (isCheck) {
+                    logMsg += ` - Check`;
                 }
+                
+                log(logMsg);
 
                 selectedSquare = null;
                 const statusEl = document.getElementById('status');
