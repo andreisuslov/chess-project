@@ -202,7 +202,47 @@ async function handleSquareClick(x, y) {
                 setTimeout(() => statusEl.classList.remove('highlight'), 500);
             } else {
                 log(message || "Invalid move");
-                selectedSquare = null; 
+                
+                // Blink the source cell twice in red for illegal moves
+                const boardDiv = document.getElementById('chess-board');
+                const squares = boardDiv.getElementsByClassName('square');
+                let animationComplete = false;
+                
+                for (let sq of squares) {
+                    if (parseInt(sq.dataset.x) === startX && parseInt(sq.dataset.y) === startY) {
+                        // Use async function for cleaner animation
+                        (async () => {
+                            // Remove selected class immediately to prevent yellow blink
+                            sq.classList.remove('selected');
+                            
+                            // First blink
+                            sq.classList.add('illegal-move');
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                            sq.classList.remove('illegal-move');
+                            
+                            // Brief pause
+                            await new Promise(resolve => setTimeout(resolve, 150));
+                            
+                            // Second blink
+                            sq.classList.add('illegal-move');
+                            await new Promise(resolve => setTimeout(resolve, 300));
+                            sq.classList.remove('illegal-move');
+                            
+                            // Re-render after animation completes
+                            renderBoard();
+                        })();
+                        animationComplete = true;
+                        break;
+                    }
+                }
+                
+                selectedSquare = null;
+                
+                // Only render immediately if no animation was started
+                if (!animationComplete) {
+                    renderBoard();
+                }
+                return; // Exit early to skip the renderBoard at the end
             }
         } catch (e) {
             console.error(e);

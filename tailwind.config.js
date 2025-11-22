@@ -8,6 +8,7 @@ module.exports = {
         'board-white': '#f0d9b5',
         'board-black': '#b58863',
         'board-darker-black': '#5d4037',
+        'board-illegal': '#ff6b6b',
       },
     },
   },
